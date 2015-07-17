@@ -32,7 +32,14 @@ docsApp.directive.ngHtmlWrapLoaded = function(reindentCode, templateMerge, loade
         html = "<!doctype html>\n<html ng-app{{module}}>\n  <head>\n{{head:4}}  </head>\n  <body>\n{{body:4}}  </body>\n</html>";
 
       angular.forEach(loadedUrls.base, function(dep) {
-        properties.head += '<script src="' + dep + '"></script>\n';
+        //properties.head += '<script src="' + dep + '"></script>\n';
+          // properties.head += '<script src="' + dep + '"></script>\n';
+          var ext = dep.split(/\./).pop();
+          if (ext == 'css') {
+              properties.head += '    <link rel="stylesheet" href="' + dep + '" type="text/css">\n';
+          } else if (ext == 'js') {
+              properties.head += '    <script src="' + dep+ '"></script>\n';
+          }
       });
 
       angular.forEach((attr.ngHtmlWrapLoaded || '').split(' '), function(dep) {
@@ -122,6 +129,15 @@ docsApp.serviceFactory.loadedUrls = function($document) {
     }
   });
 
+    var cssUrls = {};
+    angular.forEach($document.find('link'), function(link) {
+        tmp.href = link.href;
+        var match = link.href.match(/^.*\/([^\/]*\.css)$/);
+        if (match) {
+            cssUrls[tmp.pathname] = match[0];
+        }
+    });
+
   urls.base = [];
   angular.forEach(NG_DOCS.scripts, function(script) {
     tmp.href = script;
@@ -131,6 +147,13 @@ docsApp.serviceFactory.loadedUrls = function($document) {
     }
   });
 
+    angular.forEach(NG_DOCS.styles, function(style) {
+        tmp.href = style;
+        var match = cssUrls[tmp.pathname];
+        if (match) {
+            urls.base.push(match);
+        }
+    });
   return urls;
 };
 
@@ -163,7 +186,13 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, loaded
         '</html>\n';
     var scriptDeps = '';
     angular.forEach(loadedUrls.base, function(url) {
-        scriptDeps += '    <script src="' + url + '"></script>\n';
+     //   scriptDeps += '    <script src="' + url + '"></script>\n';
+        var ext = url.split(/\./).pop();
+        if (ext == 'css') {
+            scriptDeps += '    <link rel="stylesheet" href="' + url + '" type="text/css">\n';
+        } else if (ext == 'js') {
+            scriptDeps += '    <script src="' + url+ '"></script>\n';
+        }
     });
     angular.forEach(allFiles, function(file) {
       var ext = file.name.split(/\./).pop();

@@ -163,6 +163,7 @@ function processDoc(opts) {
     setup.startPage = options.startPage;
     setup.discussions = options.discussions;
     setup.scripts = options.scripts;
+    setup.styles = options.styles;
     docsStream.push(new File({
       base: fakeDest,
       cwd: fakeDest,
