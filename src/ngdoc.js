@@ -961,10 +961,17 @@ function title(doc) {
       this.tag('code', name);
       this.tag('div', function () {
         this.tag('span', {class: 'hint'}, function () {
-          if (type && component) {
-            this.text(type + ' in ' + componentType + ' ');
-            this.tag('code', component);
-          }
+       if (type && component && doc.since) {
+                this.text(type + ' in ' + componentType + ' ');
+                this.tag('code', component);
+              this.tag('code', ' since v'+doc.since);
+
+            }
+
+            else if (type && component) {
+                this.text(type + ' in ' + componentType + ' ' );
+                this.tag('code', component);
+            }
         });
       });
     };
