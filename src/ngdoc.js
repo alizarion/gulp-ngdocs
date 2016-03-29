@@ -165,7 +165,7 @@ Doc.prototype = {
       IS_URL = /^(https?:\/\/|ftps?:\/\/|mailto:|\.|\/)/,
       IS_ANGULAR = /^(api\/)?(angular|ng|AUTO)\./,
       IS_HASH = /^#/,
-      parts = trim(text).split(/(```[+-]?[a-z]*[\s\S]*?```|<pre.*?>[\s\S]*?<\/pre>|<doc:example(\S*).*?>[\s\S]*?<\/doc:example>|<example[^>]*>[\s\S]*?<\/example>)/),
+      parts = trim(text).split(/(<pre.*?>[\s\S]*?<\/pre>|<doc:example(\S*).*?>[\s\S]*?<\/doc:example>|<example[^>]*>[\s\S]*?<\/example>)/),
       seq = 0,
       placeholderMap = {};
 
@@ -282,31 +282,6 @@ Doc.prototype = {
         replace(/{@installModule\s+(\S+)?}/g, function(_, module) {
           return explainModuleInstallation(module);
         });
-
-      if(self.options.highlightCodeFences) {
-        parts[i] = parts[i].replace(/^```([+-]?)([a-z]*)([\s\S]*?)```/i, function(_, alert, type, content){
-          var tClass = 'prettyprint linenums';
-
-          // check if alert type is set - if true, add the corresponding
-          // bootstrap classes
-          if(alert) {
-            tClass += ' alert alert-' + (alert === '+' ? 'success' : 'danger');
-          }
-
-          // if type is set, add lang-* information for google code
-          // prettify - normally this is not necessary, because the prettifier
-          // tries to guess the language.
-          if(type) {
-            tClass += ' lang-' + type;
-          }
-
-          return placeholder(
-              '<pre class="' + tClass + '">' +
-              content.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
-              '</pre>');
-        });
-
-      }
     });
     text = parts.join('');
 
@@ -392,7 +367,7 @@ Doc.prototype = {
       }
     });
     flush();
-    this.shortName = this.name ? this.name.split(/[\.:#]/).pop().trim() : '';
+    this.shortName = this.name.split(/[\.:#]/).pop().trim();
     this.id = this.id || // if we have an id just use it
       (this.ngdoc === 'error' ? this.name : '') ||
       (((this.file||'').match(/.*(\/|\\)([^(\/|\\)]*)\.ngdoc/)||{})[2]) || // try to extract it from file name
@@ -459,8 +434,9 @@ Doc.prototype = {
           });
           self.properties.push(property);
         } else if(atName == 'eventType') {
-          match = text.match(/(broadcast|emit)/);
+          match = text.match(/^([^\s]*)\s+on\s+([\S\s]*)/);
           self.type = match[1];
+          self.target = match[2];
         } else {
           self[atName] = text;
         }
@@ -985,10 +961,17 @@ function title(doc) {
       this.tag('code', name);
       this.tag('div', function () {
         this.tag('span', {class: 'hint'}, function () {
-          if (type && component) {
-            this.text(type + ' in ' + componentType + ' ');
-            this.tag('code', component);
-          }
+       if (type && component && doc.since) {
+                this.text(type + ' in ' + componentType + ' ');
+                this.tag('code', component);
+              this.tag('code', ' since v'+doc.since);
+
+            }
+
+            else if (type && component) {
+                this.text(type + ' in ' + componentType + ' ' );
+                this.tag('code', component);
+            }
         });
       });
     };
@@ -1293,7 +1276,7 @@ function checkBrokenLinks(docs, apis, options) {
 
   docs.forEach(function(doc) {
     doc.links.forEach(function(link) {
-      if (options && !options.html5Mode) {
+      if (options && !options.html5mode) {
         link = link.substring(2);
       }
       // convert #id to path#id
