@@ -126,23 +126,24 @@
                     <li ng-repeat="(url, name) in sections">
                         <a ng-href="{{url}}"> <b>{{name}}</b></a>
                     </li>
-
-
+                   <li>
+                     <input type="text"
+                                                 ng-model="$root.search" placeholder="Search the docs"
+                                                        abindex="1" accesskey="s" >
+                   </li>
                     <%= navContent %>
                 </ul>
+
+
             </div>
+
         </div>
 
 
     </it-side-menu-header>
 
     <it-side-menu>
-        <div class="container-fluid menu-search">
-            <div class="form-group">
-                <input type="text"  class="form-control col-lg-8" ng-model="$root.search" placeholder="search the docs"
-                       tabindex="1" accesskey="s" >
-            </div>
-        </div>
+
         <ul class="nav navbar-nav nav-pills nav-stacked list-group">
 
             <li  ng-show="pages.length" it-collapsed-item="">
@@ -156,7 +157,7 @@
         </ul>
 
         <ul ng-repeat="module in modules track by module.url" class="nav navbar-nav nav-pills nav-stacked list-group">
-
+           <a href="{{module.url}}"> <h2>{{module.name}}</h2></a>
             <li  ng-show="module.others.length" it-collapsed-item="">
                 <a href=""><h5><i class="fa fa-book fa-fw"></i>&nbsp; Module</h5></a>
                 <ul it-nav-active="active"  class=" nav navbar-nav  nav-pills nav-stacked it-menu-animated ">
