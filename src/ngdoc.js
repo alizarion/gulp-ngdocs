@@ -964,7 +964,10 @@ function title(doc) {
        if (type && component && doc.since) {
                 this.text(type + ' in ' + componentType + ' ');
                 this.tag('code', component);
-              this.tag('code', ' since v'+doc.since);
+
+              this.tag('code', function(){
+                  this.tag('a', {target: '_blank',href: 'https://github.com/alizarion/angular-common/releases/tag/v'+doc.since},' since v'+doc.since);
+              });
 
             }
 
