@@ -175,7 +175,7 @@ docsApp.serviceFactory.formPostData = function($document) {
 
 docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, loadedUrls) {
   return function(content) {
-    var allFiles = [].concat(content.js, content.css, content.html);
+    var allFiles = [].concat(content.js, content.css, content.html, content.json);
     var indexHtmlContent = '<!doctype html>\n' +
         '<html ng-app="{{module}}">\n' +
         '  <head>\n' +
