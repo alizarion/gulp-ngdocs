@@ -84,6 +84,7 @@ exports.Example.prototype.toHtml = function() {
 
 exports.Example.prototype.toHtmlEdit = function() {
   var out = [];
+
   out.push('<div source-edit="' + this.module + '"');
   out.push(' source-edit-deps="' + this.deps.join(' ') + '"');
   out.push(' source-edit-html="' + ids(this.html) + '"');
@@ -111,6 +112,7 @@ exports.Example.prototype.toHtmlTabs = function() {
   return out.join('');
 
   function htmlTabs(sources) {
+
     sources.forEach(function(source) {
       var wrap = '',
           isCss = source.name.match(/\.css$/),
