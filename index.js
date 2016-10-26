@@ -60,6 +60,7 @@ function sections(sects) {
     var glob = data.glob;
     var opts = data.globOpts;
     setup.sections[key] = data.title;
+      setup.gulpOptions =data;
     setup.apis[key] = data.api;
     return vfs.src(glob, opts)
       .pipe(through2.obj(
@@ -295,13 +296,16 @@ function processDoc(opts) {
     return !(/^.*\.map$/.test(file));
   });
 
-  options.styles = _.map(options.styles, function(file) {
+  options.styles = _.map(options.styles, function(theme) {
+      var file  = theme.file;
       var fileName = path.normalize(file);
     if (/^((https?:)?\/\/)/.test(file)) {
-      return file;
+        theme.file  = file;
+        return theme;
     } else {
-      fstreams.push(streamFile(file, path.join('css', path.dirname(fileName)), fakeDest));
-      return path.join('css', fileName);
+        fstreams.push(streamFile(file, path.join('css', path.dirname(fileName)), fakeDest));
+        theme.file = path.join('css', fileName);
+        return theme;
     }
   });
 
