@@ -92,6 +92,7 @@ docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
     controller: function($scope, $attrs, openPlunkr) {
       var sources = {
         module: $attrs.sourceEdit,
+        module: $attrs.sourceEdit,
         deps: read($attrs.sourceEditDeps),
         html: read($attrs.sourceEditHtml),
         css: read($attrs.sourceEditCss),
@@ -148,13 +149,17 @@ docsApp.serviceFactory.loadedUrls = function($document) {
     }
   });
 
-    angular.forEach(NG_DOCS.styles, function(style) {
-        tmp.href = style;
+
+
+   angular.forEach(NG_DOCS.styles, function(style) {
+        tmp.pathname = style.file;
         var match = cssUrls[tmp.pathname];
         if (match) {
             urls.base.push(match);
         }
     });
+
+
   return urls;
 };
 
@@ -195,6 +200,7 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, loaded
             scriptDeps += '    <script src="' + url+ '"></script>\n';
         }
     });
+
     angular.forEach(allFiles, function(file) {
       var ext = file.name.split(/\./).pop();
         if (ext == 'css') {
@@ -317,6 +323,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
    ***********************************/
 
   $scope.sections = {};
+  $scope.options = NG_DOCS.__options;
   angular.forEach(NG_DOCS.sections, function(section, url) {
     $scope.sections[(NG_DOCS.html5Mode ? '' : '#/') + url] = section;
   });
