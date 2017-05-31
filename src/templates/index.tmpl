@@ -285,6 +285,11 @@
                 <div id="loading" ng-show="loading">Loading...</div>
 
                 <div ng-hide="loading" ng-include src="currentPage.partialUrl" onload="afterPartialLoaded()" autoscroll class="content slide-reveal"></div>
+                <div ng-if="messagingToken" style="width:100%;height:600px;">
+                <span ng-init="itChatService.setCurrentTopic({reference:currentPage.id},messagingToken)" ></span>
+                  <it-chat  messaging-token="messagingToken"></it-chat>
+
+                </div>
                 <% if (discussions) { %>
                 <div id="disqus" class="disqus">
                     <h2>Discussion</h2>
