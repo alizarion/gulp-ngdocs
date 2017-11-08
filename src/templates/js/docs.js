@@ -290,7 +290,9 @@ docsApp.controller.DocsController = function($scope, $location, $window, section
     $scope.itChatService = itChatService;
     var trigram = localStorage.getItem('trigram');
     if(trigram){
-        itMessaging.$signIn('d57cc83c-cb8b-4586-8e1b-3c3f127934e7', {
+        itMessaging.$signIn('d57cc83c-cb8b-4586-8e1b-3c3f127934e7',
+                            'kO6FIy/xIQas7zgqfMXpfLWDnIiHkTKRYSNfz7OOtvrblS37DFetHDtf1mOfeJiSvGzVeFDksBAvJrag7l2mmg==',
+                            {
             id: trigram,
             displayName: trigram
         }, 898090).then(function(token) {
